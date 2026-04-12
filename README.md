@@ -1,84 +1,94 @@
-README
-======
-Project: Power Consumption Prediction in O-RAN Using Transfer Learning
-Author:  Jiamin Wu
+# README
 
-----------------------------------------------------------------
-Repository Structure
-----------------------------------------------------------------
+**Project:** Power Consumption Prediction in O-RAN Using Transfer Learning  
+**Author:** Jiamin Wu  
 
+---
+
+## Repository Structure
+
+```
 BAI_projectcode/
-│
-├── dataprocessing.ipynb       # Data preprocessing pipeline
-│                              # Loads raw DS1 and DS2 from origin_data/, 
-│                              # applies column alignment for DS1 and condition
-│                              # filtering for DS2, and exports clean_ul_with_conditions2.csv
-│
-├── thesis_model.ipynb         # Stage I: Model comparison on DS2
-│                              # Trains and evaluates 
-│                              #  Model 1 (Baseline DNN)
-│                              #  Model 2 (Regularised DNN)
-│                              # and Model 3 (Hybrid DNN-XGBoost)
-│
-├── transfer.ipynb             # Stage II: Transfer learning
-│                              # Cross-platform experiments between DS1 and DS2 
-│                              # using the Hybrid DNN-XGBoost model
-│
-├── clean_ul_with_conditions2.csv  # DS2 after preprocessing
-│                                  # (output of dataprocessing.ipynb)
-│
-├── original_preprocess.csv        # DS1 after preprocessing
-│                                  # (output of dataprocessing.ipynb)
-│
-└── origin_data/               # Raw datasets downloaded from their original sources (see below)
+├── dataprocessing.ipynb            # Data preprocessing pipeline
+│                                   # Loads raw DS1 and DS2 from origin_data/,
+│                                   # applies column alignment for DS1 and
+│                                   # condition filtering for DS2
+│                                   # exports clean_ul_with_conditions2.csv
+├── thesis_model.ipynb              # Stage I: Model comparison on DS2
+│                                   # Trains and evaluates Model 1 (Baseline DNN),
+│                                   # Model 2 (Regularised DNN), and
+│                                   # Model 3 (Hybrid DNN-XGBoost)
+├── transfer.ipynb                  # Stage II: Transfer learning
+│                                   # Cross-platform experiments between DS1 and DS2
+│                                   # using the Hybrid DNN-XGBoost model
+├── clean_ul_with_conditions2.csv   # DS2 after preprocessing
+│                                   # (output of dataprocessing.ipynb)
+├── original_preprocess.csv         # DS1 after preprocessing
+│                                   # (output of dataprocessing.ipynb)
+└── origin_data/                    # Raw datasets downloaded from original sources
+```
 
-----------------------------------------------------------------
-Running Order
-----------------------------------------------------------------
+---
 
-1. dataprocessing.ipynb   -- Preprocess raw data from origin_data/
-2. thesis_model.ipynb     -- Stage I model comparison
-3. transfer.ipynb         -- Stage II transfer learning
+## Running Order
 
-----------------------------------------------------------------
-Raw Data Sources (origin_data/)
-----------------------------------------------------------------
+1. `dataprocessing.ipynb` — Preprocess raw data from `origin_data/`
+2. `thesis_model.ipynb` — Stage I model comparison
+3. `transfer.ipynb` — Stage II transfer learning
 
-DS1: O-RAN Experimental Evaluation Dataset
-  File:      original_preprocess.csv
-  Reference: J. X. Salvat Lozano, J. A. Ayala-Romero, L. Zanzi,
-             A. Garcia-Saavedra, and X. Costa-Perez, "O-RAN
-             Experimental Evaluation Datasets," IEEE DataPort,
-             2022. DOI: 10.21227/64s5-q431
+---
 
-DS2: Virtualised Base Station Power Consumption Dataset
-  File:      dataset_ul.csv
-  Reference: J. A. Ayala-Romero, I. Khalid, A. Garcia-Saavedra,
-             X. Costa-Perez, and G. Iosifidis, "Dataset -
-             Experimental Evaluation of Power Consumption in
-             Virtualized Base Stations," GitHub, 2021.
-             URL: https://github.com/jaayala/power_ul_dataset
+## Raw Data Sources (`origin_data/`)
 
-----------------------------------------------------------------
-Dependencies
-----------------------------------------------------------------
+**DS1: O-RAN Experimental Evaluation Dataset**  
+- File: `original_preprocess.csv`  
+- Reference: J. X. Salvat Lozano, J. A. Ayala-Romero, L. Zanzi, A. Garcia-Saavedra, and X. Costa-Perez, "O-RAN Experimental Evaluation Datasets," IEEE DataPort, 2022.  
+- DOI: [10.21227/64s5-q431](https://dx.doi.org/10.21227/64s5-q431)
 
-Python 3.10+
-PyTorch       (CUDA cu118)
-XGBoost
-scikit-learn
-pandas
-numpy
-matplotlib
+**DS2: Virtualised Base Station Power Consumption Dataset**  
+- File: `dataset_ul.csv`  
+- Reference: J. A. Ayala-Romero, I. Khalid, A. Garcia-Saavedra, X. Costa-Perez, and G. Iosifidis, "Dataset - Experimental Evaluation of Power Consumption in Virtualized Base Stations," GitHub, 2021.  
+- URL: [https://github.com/jaayala/power_ul_dataset](https://github.com/jaayala/power_ul_dataset)
 
-Install via conda:
-  conda create -n gpu python=3.10
-  conda activate gpu
-  pip install torch torchvision torchaudio
-  pip install xgboost scikit-learn pandas numpy matplotlib
+---
 
-----------------------------------------------------------------
-Notes
-----------------------------------------------------------------
+## Environment Setup
 
-- GPU is recommended but not required
+**Step 1:** Create and activate conda environment
+```bash
+conda create -n gpu python=3.10
+conda activate gpu
+```
+
+**Step 2:** Install PyTorch with CUDA 11.8 support
+```bash
+pip install torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/cu118
+```
+
+**Step 3:** Install remaining dependencies
+```bash
+pip install xgboost scikit-learn pandas numpy matplotlib
+```
+
+---
+
+## Dependencies
+
+| Package      | Version  |
+|-------------|----------|
+| Python      | 3.10+    |
+| PyTorch     | 2.0+ (CUDA 11.8) |
+| XGBoost     | 1.7+     |
+| scikit-learn| 1.2+     |
+| pandas      | 1.5+     |
+| numpy       | 1.23+    |
+| matplotlib  | 3.6+     |
+
+---
+
+## Notes
+
+- All experiments use a fixed random seed (`SEED = 42`)
+- Hardware-dependent features (`turbodec_it`, `dec_time`) are excluded from all experiments
+- GPU is recommended but not required; CPU training will be significantly slower
